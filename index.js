@@ -2,43 +2,83 @@ const readline = require("node:readline/promises");
 const { stdin: input, stdout: output } = require("node:process");
 
 const quizInterface = readline.createInterface({ input, output });
-const questions = [];
-const options = [];
-const answers = [];
+const questions = [
+    {
+        prompt: "Which keyword declares a binding that cannot be reassigned?",
+        choices: ["A. let", "B. var", "C. const", "D. static"],
+        answer: "C",
+    },
+    {
+        prompt: "What does Array.prototype.map() return?",
+        choices: [
+            "A. The first matching element",
+            "B. A new array of transformed values",
+            "C. The original array, sorted",
+            "D. A single combined value",
+        ],
+        answer: "B",
+    },
+    {
+        prompt: "What does the strict equality operator (===) compare?",
+        choices: [
+            "A. Value only, after type conversion",
+            "B. Type only",
+            "C. Value and type without coercion",
+            "D. Whether both values are objects",
+        ],
+        answer: "C",
+    },
+    {
+        prompt: "What happens to the promise returned by Promise.all() if an input rejects?",
+        choices: [
+            "A. It fulfills with the remaining values",
+            "B. It rejects with that rejection reason",
+            "C. It waits forever",
+            "D. It retries the failed promise",
+        ],
+        answer: "B",
+    },
+];
 
-questions.push("What does CPU stand for?");
-options.push(["A. Computer Processing Unit", "B. Central Processing Unit", "C. Computer Processing User", "D. Central Processing User"]);
-answers.push("B");
-
-questions.push("What is the full form of RAM?");
-    options.push(["A. Random Access Memory", "B. Read Access Memory", "C. Random Authorization Memory", "D. Read Authorization Memory"]);
-answers.push("A");
-
-questions.push("Which device is used to input data into a computer?");
-    options.push(["A. Monitor", "B. Printer", "C. Keyboard", "D. Speaker"]);
-answers.push("C");
-
-questions.push("Which component of a computer is responsible for storing data permanently?");
-    options.push(["A. RAM", "B. CPU", "C. Hard Disk", "D. CD-ROM"]);
-answers.push("C");
-
-const runQuiz = async () => {
-    let countCorrect = 0;
-
-    for (let i = 0; i < questions.length; ++i) {
-        console.log("\n", questions[i], "\n", options[i]);
-        const result = (await quizInterface.question("Write the option letter [A, B, C or D]: ")).trim().toUpperCase();
-        console.log("Your answer: ", result);
-        console.log("Correct answer: ", answers[i]);
-        if (result === answers[i]) {
-            ++countCorrect;
+const askForAnswer = async () => {
+    let answer = "";
+    do {
+        answer = (await quizInterface.question("Choose A, B, C, or D: "))
+            .trim()
+            .toUpperCase();
+        if (!["A", "B", "C", "D"].includes(answer)) {
+            console.log("Please enter one letter: A, B, C, or D.");
         }
-    }
-
-    const percentage = Math.round((countCorrect / questions.length) * 100);
-    console.log("\n\nYour score: ", percentage + "%");
-    quizInterface.close();
+    } while (!["A", "B", "C", "D"].includes(answer));
+    return answer;
 };
 
-runQuiz();
+const runQuiz = async () => {
+    let correctCount = 0;
 
+    try {
+        for (const [index, question] of questions.entries()) {
+            console.log(`\n${index + 1}. ${question.prompt}`);
+            question.choices.forEach((choice) => console.log(choice));
+
+            const answer = await askForAnswer();
+            if (answer === question.answer) {
+                correctCount += 1;
+                console.log("Correct!");
+            } else {
+                const correctChoice = question.choices.find((choice) => choice.startsWith(`${question.answer}.`));
+                console.log(`Not quite. The correct answer is ${correctChoice}`);
+            }
+        }
+
+        const percentage = Math.round((correctCount / questions.length) * 100);
+        console.log(`\nFinal score: ${correctCount}/${questions.length} (${percentage}%)`);
+    } finally {
+        quizInterface.close();
+    }
+};
+
+runQuiz().catch((error) => {
+    console.error("The quiz could not finish:", error.message);
+    process.exitCode = 1;
+});

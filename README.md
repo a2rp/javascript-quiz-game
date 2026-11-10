@@ -1,32 +1,27 @@
 # JavaScript Quiz Game
 
-A small command-line quiz built with Node.js. It asks basic computer knowledge questions, checks each answer, and prints the final percentage score.
-
-![JavaScript Quiz Game](Screenshot%20(841).png)
+A small command-line quiz for practising JavaScript fundamentals with Node.js.
 
 ## Features
 
-- Four multiple-choice computer fundamentals questions
-- Case-insensitive answer handling
-- Immediate answer feedback
-- Final percentage score
+- Four multiple-choice JavaScript questions
+- Case-insensitive A-D answers with a retry for invalid input
+- Immediate correct or incorrect feedback
+- Final score as both points and a percentage
 
 ## Tech stack
 
 - JavaScript
 - Node.js
-- Node readline
+- Node.js `readline/promises`
 
 ## Run locally
 
-```bash
-npm install
-npm start
-```
+Run `node index.js` or `npm start` from the project directory. The project has no third-party dependencies.
 
-## Future prospects
+## Further practice
 
-- Add question categories and larger question sets
+- Add question categories and a larger question bank
 - Add a replay option and high-score tracking
 - Add timed rounds and difficulty levels
 

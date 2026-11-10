@@ -1,7 +1,11 @@
 {
   "name": "javascript-quiz-game",
+  "description": "An interactive command-line quiz for core JavaScript concepts using Node.js.",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node index.js"
   }
